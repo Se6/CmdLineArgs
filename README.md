@@ -7,8 +7,8 @@ A simple and easy to use C++ command line parsing library contained in a single 
 
 Goal
 ----
-The motivation behind this library was to be very simple to use, yet quite complete and getting a nicely formatted usage.
-The idea is to be able to use in 2 minutes after looking at an example.
+The motivation behind this library is to be very simple to use, yet quite complete and getting a nicely formatted usage.
+It should take 2 minutes to be able to use it after looking at an example.
 
 
 Features
