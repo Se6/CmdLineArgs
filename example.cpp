@@ -25,10 +25,10 @@ int main(int argc, char **argv){
 
         cl.addUsageSeparator("  == Advanced options:");
         vector<string> default_strings = {"one", "two", "three"};
-        some_strings = cl.getParams("some_stings", default_strings, "3 strings separated by comma");
+        some_strings = cl.getParams("some_strings", default_strings, "some strings separated by comma", false);
         ratio = cl.getParam("ratio", 0.2f, "The ratio");
-        vector<int> default_numbers = {1, 2};
-        values = cl.getParams("values", default_numbers, "A comma separated list of values", false);
+        vector<int> default_numbers = {1, 2, 3};
+        values = cl.getParams("values", default_numbers, "A comma separated list of 3 values");
 
 		usage = cl.usage();
         remaining = cl.getRemaining();
