@@ -46,42 +46,57 @@ Example
         float ratio;
         string usage;
         vector<int> numbers;
-        vector<string> remaining;
+        vector<float> filter;
+        vector<string> files;
         
         try{
-            CmdLineArgs cl(argc, argv, "Example of command line arguments");
+            CmdLineArgs cl(argc, argv, "To compute the size of the universe.\n Usage: prog [options] <filenames>\n");
             help = cl.getFlag("help", "Getting usage");
             name = cl.getParam("name", "", "The name of frame");
             
-            cl.addUsageSeparator("  == Advanced options:");
+            cl.addUsageSeparator("\n  == Advanced options:");
             ratio = cl.getParam("ratio", 0.2f, "The frame ratio");
             vector<int> default_numbers = {1, 2};
-            numbers = cl.getParams("numbers", default_numbers, "A comma separated list of values");
+            numbers = cl.getParams("numbers", default_numbers, true, "A comma separated list of 2 values");
+            
+            cl.addUsageSeparator("\n  == Filter controls:");
+            vector<float> default_filter = {0.25, 0.5, 0.25};
+            filter = cl.getParams("filter", 'f', default_filter, false, "Filter coefficients. Can be of any size.");
             
             usage = cl.usage();
-            remaining = cl.getRemaining();
+            files = cl.getRemaining();
             cl.throwIfUnparsed();
         } catch (const exception& error) {
             cerr << usage << error.what() << endl;
             return 1;
         }
         
-        // using name, ratio, numbers ...
-        cout << usage;
+        if (help || !files.size()) {
+            cout << usage;
+            return 1;
+        }   
         
+        // using name, ratio, numbers ...
+            
     }
+
 
 
 The above will generate on the command line the following usage message:
 
-    Example of command line arguments
-    options are:
-    --help                         Getting usage
-    --name (default is "")         The name of frame
-    == Advanced options:
-    --ratio (default is 0.2)       The ratio
-    --numbers (default is 1,2)     A comma separated list of values
+    To compute the size of the universe.
+     Usage: prog [options] <filenames>
 
+    Options are:
+        --help                                      Getting usage
+        --name (default: "")                        The name of frame
+
+      == Advanced options:
+        --ratio (default: 0.2)                      The frame ratio
+        --numbers (default: 1,2)                    A comma separated list of 2 values
+
+      == Filter controls:
+        --filter (-f)  (default: 0.25,0.5,0.25)     Filter coefficients. Can be of any size.
 
 List of files
 -------------

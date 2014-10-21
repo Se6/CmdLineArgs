@@ -68,7 +68,7 @@ void fixTest(int test_no, int argc, const char **argv, int& failures)
         cl.addUsageSeparator("  == Advanced options:");
         f = cl.getParam("ratio", 0.2f, "The frame ratio");
         vector<int> default_numbers = {1, 2};
-        numbers = cl.getParams("numbers", default_numbers, "A comma separated list of values");
+        numbers = cl.getParams("numbers", default_numbers, true, "A comma separated list of values");
 
 		usage = cl.usage();
         remaining = cl.getRemaining();
@@ -134,7 +134,7 @@ void getParamsTest(int test_no, int& failures) {
     
     try{
         CmdLineArgs cl(argc, const_cast<char**>(argv), "Test of command line arguments");
-        values = cl.getParams("values", zeValues, "4 ints");
+        values = cl.getParams("values", zeValues, true, "4 ints");
     } catch (const exception& error) {
         cout << "Test " << test_no << ": Unparsed failure: " << error.what() << endl;
         ++failures;

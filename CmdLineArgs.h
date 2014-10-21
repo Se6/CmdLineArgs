@@ -20,8 +20,8 @@ public:
     template <class T> T getParam(const std::string &long_name,                  T default_value, const std::string &desc);
 	
     // Get multiple values in a vector: (with or without a short name)
-    template <class T> std::vector<T> getParams(const std::string &long_name, char short_name, std::vector<T> default_vals, const std::string &desc, bool enforce_default_size=true, char separator=',');
-    template <class T> std::vector<T> getParams(const std::string &long_name,                  std::vector<T> default_vals, const std::string &desc, bool enforce_default_size=true, char separator=',');
+    template <class T> std::vector<T> getParams(const std::string &long_name, char short_name, std::vector<T> default_vals, bool enforce_default_size, const std::string &desc, char separator=',');
+    template <class T> std::vector<T> getParams(const std::string &long_name,                  std::vector<T> default_vals, bool enforce_default_size, const std::string &desc, char separator=',');
 
     // Get a flag (with or without a short name):
     int getFlag(const std::string &long_name, char short_name, const std::string &desc);
@@ -35,8 +35,8 @@ public:
     std::string getParam(const std::string &long_name,                  const char* default_value,        const std::string &desc);
 	
     // String specialisation for multiple values:
-    std::vector<std::string> getParams(const std::string &long_name, char short_name, std::vector<std::string> default_vals, const std::string &desc, bool enforce_default_size=true, char separator=',');
-    std::vector<std::string> getParams(const std::string &long_name,                  std::vector<std::string> default_vals, const std::string &desc, bool enforce_default_size=true, char separator=',');
+    std::vector<std::string> getParams(const std::string &long_name, char short_name, std::vector<std::string> default_vals, bool enforce_default_size, const std::string &desc, char separator=',');
+    std::vector<std::string> getParams(const std::string &long_name,                  std::vector<std::string> default_vals, bool enforce_default_size, const std::string &desc, char separator=',');
     /// @endcond
 
     // To format the usage, adding a separation between options:
@@ -250,16 +250,17 @@ T CmdLineArgs::getParam(const std::string &long_name, T default_value, const std
    @param long_name long name of the parameter (so starting with "--").
    @param short_name short name of the parameter (so a single letter starting with "-").
    @param default_vals default values to give if the parameter is not present.
-   @param desc A description of the parameter. (will go into the usage)
    @param enforce_default_size When true, expect to have the same number of elements than default_vals. If only one value is given,
    will replicate the value. If a different number of values is given will throw.
+   @param desc A description of the parameter. (will go into the usage)
    @param separator the character used to separate values. Multiple of them will be ignored and compressed to one.
    Also there is not way of escaping a separator (no way the values can contain this separartor)
    @return the values of the parameter, returned as a vector.
  */
 template <class T>
-std::vector<T> CmdLineArgs::getParams(const std::string &long_name, char short_name, std::vector<T> default_vals, 
-                                      const std::string &desc, bool enforce_default_size, char separator)
+std::vector<T> CmdLineArgs::getParams(const std::string &long_name, char short_name, 
+                                      std::vector<T> default_vals, bool enforce_default_size, 
+                                      const std::string &desc, char separator)
 {
     // Join the default values wit the separator for the usage
     //
@@ -346,17 +347,18 @@ std::vector<T> CmdLineArgs::getParams(const std::string &long_name, char short_n
    @brief To get a parameter with multiple values, no short name.
    @param long_name long name of the parameter (so starting with "--").
    @param default_vals default values to give if the parameter is not present.
-   @param desc A description of the parameter. (will go into the usage)
    @param enforce_default_size When true, expect to have the same number of elements than default_vals. If only one value is given,
    will replicate the value. If a different number of values is given will throw.
+   @param desc A description of the parameter. (will go into the usage)
    @param separator the character used to separate values.
    @return the values of the parameter, returned as a vector.
  */
 template <class T>
-std::vector<T> CmdLineArgs::getParams(const std::string &long_name, std::vector<T> default_vals, 
-                                      const std::string &desc, bool enforce_default_size, char separator)
+std::vector<T> CmdLineArgs::getParams(const std::string &long_name,  
+                                      std::vector<T> default_vals, bool enforce_default_size,
+                                      const std::string &desc, char separator)
 {
-    return getParams<T>(long_name, ' ', default_vals, desc, enforce_default_size, separator);
+    return getParams<T>(long_name, ' ', default_vals, enforce_default_size, desc, separator);
 }
 
 
@@ -473,7 +475,7 @@ std::string CmdLineArgs::getParam(const std::string &long_name, const char* defa
 
 // The following specialisation for string is necessary to cope with spaces inside strings and to catch the delimiter
 //
-std::vector<std::string> CmdLineArgs::getParams(const std::string &long_name, char short_name, std::vector<std::string> default_vals, const std::string &desc, bool enforce_default_size, char separator)
+std::vector<std::string> CmdLineArgs::getParams(const std::string &long_name, char short_name, std::vector<std::string> default_vals, bool enforce_default_size, const std::string &desc, char separator)
 {
     // Join the default values wit the separator for the usage
     //
@@ -540,9 +542,9 @@ std::vector<std::string> CmdLineArgs::getParams(const std::string &long_name, ch
     return vec;
 }
 
-std::vector<std::string> CmdLineArgs::getParams(const std::string &long_name, std::vector<std::string> default_vals, const std::string &desc, bool enforce_default_size, char separator)
+std::vector<std::string> CmdLineArgs::getParams(const std::string &long_name, std::vector<std::string> default_vals, bool enforce_default_size, const std::string &desc, char separator)
 {
-    return getParams(long_name, ' ', default_vals, desc, enforce_default_size, separator);
+    return getParams(long_name, ' ', default_vals, enforce_default_size, desc, separator);
 }
 
 /// @endcond
