@@ -13,6 +13,7 @@ int main(int argc, char **argv){
 	float ratio;
 	string usage;
 	vector<int> values;
+    vector<string>  some_strings;
 	vector<string> remaining;
 	
 	try{
@@ -23,9 +24,11 @@ int main(int argc, char **argv){
         number = cl.getParam("number", 'n', 5, "Number of whatever");
 
         cl.addUsageSeparator("  == Advanced options:");
+        vector<string> default_strings = {"one", "two", "three"};
+        some_strings = cl.getParams("some_stings", default_strings, "3 strings separated by comma");
         ratio = cl.getParam("ratio", 0.2f, "The ratio");
         vector<int> default_numbers = {1, 2};
-        values = cl.getParams("values", default_numbers, "A comma separated list of values");
+        values = cl.getParams("values", default_numbers, "A comma separated list of values", false);
 
 		usage = cl.usage();
         remaining = cl.getRemaining();
@@ -41,6 +44,10 @@ int main(int argc, char **argv){
 
 	cout << endl;
 	cout << "name=" << name << endl;
+    cout << "some_stings=";
+    for(auto &st: some_strings)
+        cout << st << ",";
+	cout << endl;
     cout << "number=" << number << endl;
 	cout << "ratio=" << ratio << endl;
 	cout << "numbers=";
