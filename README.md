@@ -30,7 +30,6 @@ Features
 Requirements
 ------------
 A C++11 compiler.
-You only need the file CmdLineArgs.h
 To generate the documentation you will need Doxygen.
 
 
@@ -119,8 +118,8 @@ Building & testing
 - `make doc` to generate the html documentation.
 
 
-Known issues
-------------
+Limitations
+-----------
 - Conflict of shorten parameters names are not checked.
   if we have `getParam("aparam", 0, ...)`
   then `--aparam 0` will be fine, and also `--ap 0`. That is a feature. However if we also have `getParam("apart", 0)`, then `--ap 0` will set parameter aparam since it was the first defined....
