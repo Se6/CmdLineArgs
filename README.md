@@ -13,9 +13,11 @@ It should take 2 minutes to be able to use it after looking at an example.
 
 Features
 --------
-- Supports "parameters" which we define by a name preceded by "--" and followed by a value. Example: `--nb 10` (`--nb=10` is also valid. Here "nb" is the parameter name, 10 its value.)
-- Supports "flags" which we define by a name preceded by "--" and not followed by a value. Example: `--enable` (here "flag" is the flag name.)
-- Supports long and short names. Long names starts with "--" and short names are one letter starting with a single "-".
+- Supports "parameters" which we define by a name preceded by "--" and followed by a value. Example: `--nb 10` (`--nb=10` is also valid). Here *nb* is the parameter name, *10* its value.
+- Supports "flags" which we define by a name preceded by "--" and not followed by a value. Example: `--enable` (here *flag* is the flag name.)
+- Supports long and short names: 
+    - Long names starts with "--".
+    - Short names are one letter starting with a single "-".
 - Gives a nicely formatted usage.
 - Parameters and flags are defined and retrieved in a single call: no need to first install the paramter or flag and then retrieve its value.
 - Throws runtime_error exception when a parsing error occurs.
@@ -98,6 +100,7 @@ The above will generate on the command line the following usage message:
       == Filter controls:
         --filter (-f)  (default: 0.25,0.5,0.25)     Filter coefficients. Can be of any size.
 
+
 List of files
 -------------
 - README.md This file.
@@ -106,7 +109,7 @@ List of files
 - example.cpp A simple example. You can compile it and try it.
 - test.cpp Some tests to check CmdLineArgs.
 - Makefile A gnu make file to build the example, test and gnerate the doxygen documentation.
-- Doxyfile.in Doxygen configuration file for hte documentation.
+- Doxyfile.in Doxygen configuration file for the documentation.
 
 
 Building & testing
