@@ -19,12 +19,13 @@ Features
     - Long names starts with "--".
     - Short names are one letter starting with a single "-".
 - Gives a nicely formatted usage.
-- Parameters and flags are defined and retrieved in a single call: no need to first install the paramter or flag and then retrieve its value.
+- Parameters and flags are defined and retrieved in a single call: no need to first install the parameter or flag and then retrieve its value.
 - Throws runtime_error exception when a parsing error occurs.
 - Abreviation of long names: `--my_long_parameter_name` can be used as `--my` as long as it does not conflict with another parameter name. Conflicts are not checked though.
 - Single header file.
 - Short flags can be combined. (`-f -l` is equivalent to `-fl`)
 - Integer parameters can be entered in decimal or hexadecimal notation. (Exple: `--number 0xff`)
+- Supports multiple values: `--values 2 3 4` 
 
 
 Requirements
@@ -51,18 +52,21 @@ Example
         vector<string> files;
         
         try{
-            CmdLineArgs cl(argc, argv, "To compute the size of the universe.\n Usage: prog [options] <filenames>\n");
+            CmdLineArgs cl(argc, argv, "To compute the size of the universe.\n 
+                                        Usage: prog [options] <filenames>\n");
             help = cl.getFlag("help", "Getting usage");
             name = cl.getParam("name", "", "The name of frame");
             
             cl.addUsageSeparator("\n  == Advanced options:");
             ratio = cl.getParam("ratio", 0.2f, "The frame ratio");
             vector<int> default_numbers = {1, 2};
-            numbers = cl.getParams("numbers", default_numbers, true, "A comma separated list of 2 values");
+            numbers = cl.getParams("numbers", default_numbers, true, 
+                                    "A comma or space separated list of 2 values");
             
             cl.addUsageSeparator("\n  == Filter controls:");
             vector<float> default_filter = {0.25, 0.5, 0.25};
-            filter = cl.getParams("filter", 'f', default_filter, false, "Filter coefficients. Can be of any size.");
+            filter = cl.getParams("filter", 'f', default_filter, false, 
+                                "Filter coefficients. Can be of any size.");
             
             usage = cl.usage();
             files = cl.getRemaining();
@@ -94,7 +98,7 @@ The above will generate on the command line the following usage message:
 
       == Advanced options:
         --ratio (default: 0.2)                      The frame ratio
-        --numbers (default: 1,2)                    A comma separated list of 2 values
+        --numbers (default: 1,2)                    A comma or space separated list of 2 values
 
       == Filter controls:
         --filter (-f)  (default: 0.25,0.5,0.25)     Filter coefficients. Can be of any size.
