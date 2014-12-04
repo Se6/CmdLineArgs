@@ -527,7 +527,7 @@ std::vector<std::string> CmdLineArgs::getParams(const std::string &long_name, ch
         return default_vals;
     
     if ( enforce_default_size && vec.size() == 1 )
-        for( int i=1; i<default_vals.size(); ++i)
+        for( unsigned i=1; i<default_vals.size(); ++i)
             vec.push_back(vec[0]);
     
     if ( enforce_default_size && vec.size() != default_vals.size() ) {
@@ -586,8 +586,6 @@ void CmdLineArgs::addUsageSeparator(const std::string &desc)
  */
 std::string CmdLineArgs::usage()
 {
-	typedef std::vector<std::pair<std::string,std::string> > t_vec;
-	
 	// First find the maxim size of the arguments names:
 	std::string::size_type left_size=0; 
 	for( auto pos=usage_.begin(); pos!=usage_.end(); ++pos ) {
