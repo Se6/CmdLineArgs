@@ -36,56 +36,57 @@ To generate the documentation you will need Doxygen.
 
 Example
 --------
+```C
+#include "CmdLineArgs.h"
+    
+using namespace std;
+    
+int main(int argc, char **argv) {
 
-    #include "CmdLineArgs.h"
+    bool help;
+    string name;
+    float ratio;
+    string usage;
+    vector<int> numbers;
+    vector<int> default_numbers = {1, 2};
+    vector<float> filter;
+    vector<float> default_filter = {0.25, 0.5, 0.25};
+    vector<string> files;
     
-    using namespace std;
-    
-    int main(int argc, char **argv) {
+    try{
+        CmdLineArgs cl(argc, argv, "To compute the size of the universe.\n 
+                                    Usage: prog [options] <filenames>\n");
+                                    
+        help = cl.getFlag("help", "Getting usage");
+        name = cl.getParam("name", "", "The name of frame");
         
-        bool help;
-        string name;
-        float ratio;
-        string usage;
-        vector<int> numbers;
-        vector<float> filter;
-        vector<string> files;
+        cl.addUsageSeparator("\n  == Advanced options:");
+        ratio       = cl.getParam("ratio", 0.2f, "The frame ratio");
+        numbers     = cl.getParams("numbers", default_numbers, true, 
+                                "A comma or space separated list of 2 values");
         
-        try{
-            CmdLineArgs cl(argc, argv, "To compute the size of the universe.\n 
-                                        Usage: prog [options] <filenames>\n");
-            help = cl.getFlag("help", "Getting usage");
-            name = cl.getParam("name", "", "The name of frame");
-            
-            cl.addUsageSeparator("\n  == Advanced options:");
-            ratio = cl.getParam("ratio", 0.2f, "The frame ratio");
-            vector<int> default_numbers = {1, 2};
-            numbers = cl.getParams("numbers", default_numbers, true, 
-                                    "A comma or space separated list of 2 values");
-            
-            cl.addUsageSeparator("\n  == Filter controls:");
-            vector<float> default_filter = {0.25, 0.5, 0.25};
-            filter = cl.getParams("filter", 'f', default_filter, false, 
-                                "Filter coefficients. Can be of any size.");
-            
-            usage = cl.usage();
-            files = cl.getRemaining();
-            cl.throwIfUnparsed();
-        } catch (const exception& error) {
-            cerr << usage << error.what() << endl;
-            return 1;
-        }
+        cl.addUsageSeparator("\n  == Filter controls:");
+        filter = cl.getParams("filter", 'f', default_filter, false, 
+                            "Filter coefficients. Can be of any size.");
         
-        if (help || !files.size()) {
-            cout << usage;
-            return 1;
-        }   
+        cl.addUsageOutro("\nExample: prog --filter 0.1, 0.9, 0.1");
         
-        // using name, ratio, numbers ...
-            
+        usage = cl.usage();
+        files = cl.getRemaining();
+        cl.throwIfUnparsed();
+    } catch (const exception& error) {
+        cerr << usage << error.what() << endl;
+        return 1;
     }
-
-
+    
+    if (help || !files.size()) {
+        cout << usage;
+        return 1;
+    }   
+    
+    // using name, ratio, numbers ...
+}
+```
 
 The above will generate on the command line the following usage message:
 
@@ -102,6 +103,8 @@ The above will generate on the command line the following usage message:
 
       == Filter controls:
         --filter (-f)  (default: 0.25,0.5,0.25)     Filter coefficients. Can be of any size.
+        
+    Example: prog --filter 0.1, 0.9, 0.1
 
 
 List of files
