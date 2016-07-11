@@ -2,3 +2,7 @@
 example
 test
 /html/
+/*.config
+/*.creator
+/*.files
+/*.includes

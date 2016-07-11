@@ -42,6 +42,9 @@ public:
     // To format the usage, adding a separation between options:
     void addUsageSeparator(const std::string &desc);
 
+    // Add some description which will come after the descriptions of the different options.
+    void addUsageOutro(const std::string &str);
+
     // To get the nicely formatted usage:
     std::string usage();
 	
@@ -59,7 +62,7 @@ public:
 private:
 	
 	std::vector<std::string> args_;
-	std::string usage_intro_;
+    std::string usage_intro_, usage_outro_;
 	std::vector<std::pair<std::string, std::string> > usage_;
 	
     static std::vector<std::string> split(const std::string &s, char delim);    
@@ -581,6 +584,16 @@ void CmdLineArgs::addUsageSeparator(const std::string &desc)
 
 
 /**
+   @brief Add some description which will come after the descriptions of the different options.
+   @param str The string to appear.
+ */
+void CmdLineArgs::addUsageOutro(const std::string &str)
+{
+    usage_outro_ += str;
+}
+
+
+/**
    @brief To get a nicely formatted usage.
    @return the usage string
  */
@@ -613,7 +626,9 @@ std::string CmdLineArgs::usage()
 			usage += '\n';
 		}
 	}
-	
+
+    usage += usage_outro_;
+
 	return usage;
 }
 
