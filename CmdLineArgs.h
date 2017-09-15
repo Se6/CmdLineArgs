@@ -13,7 +13,7 @@
 class CmdLineArgs {
 public:
 	
-    CmdLineArgs(int argc, char** argv, std::string usage_intro, bool allow_set_with_equal=true);
+    CmdLineArgs(int argc, char** argv, const std::string &usage_intro, bool allow_set_with_equal=true);
 
     // Get parameters (with or without a short name):
     template <class T> T getParam(const std::string &long_name, char short_name, T default_value, const std::string &desc);
@@ -95,7 +95,7 @@ std::vector<std::string> CmdLineArgs::split(const std::string &s, char delim)
    That is the default. The only consequence is that '=' is not allowed in a parameter value.
    @note It is expected that the first argument in argv to be the program name. It will be discarded.
  */
-CmdLineArgs::CmdLineArgs(int argc, char **argv, std::string usage_intro, bool allow_set_with_equal)
+CmdLineArgs::CmdLineArgs(int argc, char **argv, const std::string &usage_intro, bool allow_set_with_equal)
     :usage_intro_(usage_intro)
 {
     for(int i=1; i<argc; ++i) {
