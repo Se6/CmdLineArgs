@@ -12,31 +12,39 @@
  */
 class CmdLineArgs {
 public:
-	
+
     CmdLineArgs(int argc, char** argv, const std::string &usage_intro, bool allow_set_with_equal=true);
 
     // Get parameters (with or without a short name):
     template <class T> T getParam(const std::string &long_name, char short_name, T default_value, const std::string &desc);
     template <class T> T getParam(const std::string &long_name,                  T default_value, const std::string &desc);
-	
+
     // Get multiple values in a vector: (with or without a short name)
-    template <class T> std::vector<T> getParams(const std::string &long_name, char short_name, std::vector<T> default_vals, bool enforce_default_size, const std::string &desc, char separator=',');
-    template <class T> std::vector<T> getParams(const std::string &long_name,                  std::vector<T> default_vals, bool enforce_default_size, const std::string &desc, char separator=',');
+    template <class T> std::vector<T> getParams(const std::string &long_name, char short_name,
+                                                const std::vector<T> &default_vals, bool enforce_default_size,
+                                                const std::string &desc, char separator=',');
+    template <class T> std::vector<T> getParams(const std::string &long_name,
+                                                const std::vector<T> &default_vals, bool enforce_default_size,
+                                                const std::string &desc, char separator=',');
 
     // Get a flag (with or without a short name):
     int getFlag(const std::string &long_name, char short_name, const std::string &desc);
     int getFlag(const std::string &long_name,                  const std::string &desc);
-	
+
     /// @cond SPECIALISATIONS
     // String and char* specialisation of the above:
     std::string getParam(const std::string &long_name, char short_name, const std::string &default_value, const std::string &desc);
     std::string getParam(const std::string &long_name,                  const std::string &default_value, const std::string &desc);
     std::string getParam(const std::string &long_name, char short_name, const char* default_value,        const std::string &desc);
     std::string getParam(const std::string &long_name,                  const char* default_value,        const std::string &desc);
-	
+
     // String specialisation for multiple values:
-    std::vector<std::string> getParams(const std::string &long_name, char short_name, std::vector<std::string> default_vals, bool enforce_default_size, const std::string &desc, char separator=',');
-    std::vector<std::string> getParams(const std::string &long_name,                  std::vector<std::string> default_vals, bool enforce_default_size, const std::string &desc, char separator=',');
+    std::vector<std::string> getParams(const std::string &long_name, char short_name,
+                                       const std::vector<std::string> &default_vals, bool enforce_default_size,
+                                       const std::string &desc, char separator=',');
+    std::vector<std::string> getParams(const std::string &long_name,
+                                       const std::vector<std::string> &default_vals, bool enforce_default_size,
+                                       const std::string &desc, char separator=',');
     /// @endcond
 
     // To format the usage, adding a separation between options:
@@ -47,25 +55,25 @@ public:
 
     // To get the nicely formatted usage:
     std::string usage();
-	
+
     // Get the remaining and unparsed arguments:
     std::vector<std::string> getRemaining();
     std::vector<std::string> getUnparsedOpts();
-    
+
     // Throw an error if there is any remaining or unparsed arguments:
     void throwIfRemaining();
     void throwIfUnparsed();
-	
-    // To check if a parameter or flag is present, without retriving it: 
+
+    // To check if a parameter or flag is present, without retriving it:
     bool isPresent(const std::string &long_name,  char short_name=' ');
 
 private:
-	
-	std::vector<std::string> args_;
+
+    std::vector<std::string> args_;
     std::string usage_intro_, usage_outro_;
-	std::vector<std::pair<std::string, std::string> > usage_;
-	
-    static std::vector<std::string> split(const std::string &s, char delim);    
+    std::vector<std::pair<std::string, std::string> > usage_;
+
+    static std::vector<std::string> split(const std::string &s, char delim);
     void addUsage(const std::string &long_name, char short_name, const std::string &default_val, const std::string &desc);
     std::vector<std::string>::iterator findLongName(const std::string &name);
     std::vector<std::string>::iterator findShortName(char);
@@ -78,10 +86,10 @@ std::vector<std::string> CmdLineArgs::split(const std::string &s, char delim)
     std::vector<std::string> elems;
     std::stringstream ss(s);
     std::string item;
-    
+
     while(getline(ss, item, delim))
         elems.push_back(item);
-    
+
     return elems;
 }
 
@@ -107,8 +115,8 @@ CmdLineArgs::CmdLineArgs(int argc, char **argv, const std::string &usage_intro, 
             args_.push_back(argv[i]);
         }
     }
-    
-	usage_intro_ += "\nOptions are:";
+
+    usage_intro_ += "\nOptions are:";
 }
 
 
@@ -116,21 +124,21 @@ CmdLineArgs::CmdLineArgs(int argc, char **argv, const std::string &usage_intro, 
 //
 std::vector<std::string>::iterator CmdLineArgs::findLongName(const std::string &name)
 {
-	std::vector<std::string>::iterator pos;
-	bool found = false;
-    
-	for( pos=args_.begin(); pos!=args_.end(); ++pos ) {
-		
+    std::vector<std::string>::iterator pos;
+    bool found = false;
+
+    for( pos=args_.begin(); pos!=args_.end(); ++pos ) {
+
         if( pos->size()<3 || pos->substr(0,2) != "--")
-			continue;
-		
+            continue;
+
         if( pos->substr(2) == name.substr(0,pos->size()-2) ){
-			found = true;
-			break;
-		}
-	}
-    
-	return found ? pos : args_.end();
+            found = true;
+            break;
+        }
+    }
+
+    return found ? pos : args_.end();
 }
 
 
@@ -138,28 +146,28 @@ std::vector<std::string>::iterator CmdLineArgs::findLongName(const std::string &
 //
 std::vector<std::string>::iterator CmdLineArgs::findShortName(char name)
 {
-	if(name==' ')
-		return args_.end();
+    if(name==' ')
+        return args_.end();
 
-	std::vector<std::string>::iterator pos;
-	bool found = false;
+    std::vector<std::string>::iterator pos;
+    bool found = false;
 
-	for(pos=args_.begin(); pos!=args_.end(); ++pos){
-		
+    for(pos=args_.begin(); pos!=args_.end(); ++pos){
+
         if( pos->size()<2 || (*pos)[0] != '-')
-			continue;
-		
-        if((*pos)[1] == '-')
-			continue;
-		
-        std::string::size_type idx = pos->find(name,1);
-		if( idx != std::string::npos ) {
-			found = true;
-			break;
-		}
-	}
+            continue;
 
-	return found ? pos : args_.end();
+        if((*pos)[1] == '-')
+            continue;
+
+        std::string::size_type idx = pos->find(name,1);
+        if( idx != std::string::npos ) {
+            found = true;
+            break;
+        }
+    }
+
+    return found ? pos : args_.end();
 }
 
 
@@ -174,29 +182,29 @@ std::vector<std::string>::iterator CmdLineArgs::findShortName(char name)
 template <class T>
 T CmdLineArgs::getParam(const std::string &long_name, char short_name, T default_value, const std::string &desc)
 {
-	T val;
-	std::ostringstream oss;
-	oss << default_value;
+    T val;
+    std::ostringstream oss;
+    oss << default_value;
     addUsage(long_name, short_name, oss.str(), desc);
-	
-	// First search the long names:
+
+    // First search the long names:
     //
     auto pos = findLongName(long_name);
-	if( pos != args_.end() ) {
-        
-		if( pos+2 > args_.end() )
-			throw std::runtime_error("\nError: parameter --" + long_name + " is not followed by a value");
-		
+    if( pos != args_.end() ) {
+
+        if( pos+2 > args_.end() )
+            throw std::runtime_error("\nError: parameter --" + long_name + " is not followed by a value");
+
         pos = args_.erase(pos);
-        
+
     } else {
-        
+
         pos = findShortName(short_name);
         if( pos != args_.end() ) {
-            
+
             if( pos+2>args_.end() )
                 throw std::runtime_error("\nError: parameter -" + std::string(1,short_name) + " is not followed by a value");
-            
+
             if( pos->size()==2 )
                 pos = args_.erase(pos);
             else {
@@ -205,32 +213,32 @@ T CmdLineArgs::getParam(const std::string &long_name, char short_name, T default
             }
         }
     }
-		
+
     if ( pos != args_.end() ) {
-        
+
         std::istringstream ss(*pos);
-		ss >> val;
-		
+        ss >> val;
+
         if( ss.fail() )
-			throw std::runtime_error("\nError: parameter --" + long_name + " is not followed by a correct value");
-        
+            throw std::runtime_error("\nError: parameter --" + long_name + " is not followed by a correct value");
+
         if( !ss.eof() ) {
             std::stringstream sshex;
             sshex << std::hex << *pos;
             sshex >> val;
-        
+
             if(sshex.fail())
                 throw std::runtime_error("\nError: parameter --" + long_name + " is not followed by a correct value");
-            
+
             if(!sshex.eof())
                 throw std::runtime_error("\nError: parameter --" + long_name + " has an incorrect value");
         }
-        
+
         args_.erase(pos);
-		return val;
-        
-	} else
-    	return default_value;
+        return val;
+
+    } else
+        return default_value;
 }
 
 
@@ -261,40 +269,40 @@ T CmdLineArgs::getParam(const std::string &long_name, T default_value, const std
    @return the values of the parameter, returned as a vector.
  */
 template <class T>
-std::vector<T> CmdLineArgs::getParams(const std::string &long_name, char short_name, 
-                                      std::vector<T> default_vals, bool enforce_default_size, 
+std::vector<T> CmdLineArgs::getParams(const std::string &long_name, char short_name,
+                                      const std::vector<T> &default_vals, bool enforce_default_size,
                                       const std::string &desc, char separator)
 {
     // Join the default values wit the separator for the usage
     //
-	std::ostringstream oss;
+    std::ostringstream oss;
     for(unsigned int i=0; i<default_vals.size(); i++){
-		if(i>0) 
+        if(i>0)
             oss << ",";
-		oss << default_vals[i];
-	}
+        oss << default_vals[i];
+    }
     addUsage(long_name, short_name, oss.str(), desc);
-	
-	T val;
-	std::vector<T> vec;
-	std::istringstream ss;
+
+    T val;
+    std::vector<T> vec;
+    std::istringstream ss;
 
     auto pos = findLongName(long_name);
-	if( pos != args_.end() ) {
-        
-		if(pos+2>args_.end())
-			throw std::runtime_error("\nError: parameter --" + long_name + " is not followed by a value");
-		
+    if( pos != args_.end() ) {
+
+        if(pos+2>args_.end())
+            throw std::runtime_error("\nError: parameter --" + long_name + " is not followed by a value");
+
         pos = args_.erase(pos);
-        
+
     } else {
 
         pos = findShortName(short_name);
         if( pos != args_.end() ) {
-            
-            if( pos+2>args_.end() ) 
+
+            if( pos+2>args_.end() )
                 throw std::runtime_error("\nError: parameter -" + std::string(1,short_name) + " is not followed by a value");
-            
+
             if( pos->size()==2 )
                 pos = args_.erase(pos);
             else{
@@ -302,33 +310,33 @@ std::vector<T> CmdLineArgs::getParams(const std::string &long_name, char short_n
                 ++pos;
             }
         }
-    
+
     }
-        
+
     if( pos != args_.end() ) {
         do {
-            
+
             ss.clear();
             ss.str(*pos);
             pos = args_.erase(pos);
-            
+
             while( ss >> val ) {
                 vec.push_back(val);
-                if( ss.peek() == separator ) 
+                if( ss.peek() == separator )
                     ss.ignore();
             }
-            
+
             if( !ss.eof() )
-                throw std::runtime_error("\nError: parameter --" + long_name + 
-                                         " (-" + std::string(1,short_name) + 
+                throw std::runtime_error("\nError: parameter --" + long_name +
+                                         " (-" + std::string(1,short_name) +
                                          ") is not followed by a correct value");
-            
+
         } while ( enforce_default_size && vec.size() < default_vals.size() && pos < args_.end() && (*pos)[0] != '-' );
-        
+
         if ( enforce_default_size && vec.size() == 1 )
             for( int i=1; i<default_vals.size(); ++i)
                 vec.push_back(vec[0]);
-        
+
         if ( enforce_default_size && vec.size() != default_vals.size() ) {
             std::ostringstream oss;
             oss << "\nError: parameter --" << long_name;
@@ -337,12 +345,12 @@ std::vector<T> CmdLineArgs::getParams(const std::string &long_name, char short_n
             oss << " is not followed by " << default_vals.size() << " values as expected.";
             throw std::runtime_error(oss.str());
         }
-        
-		return vec;
-	}
 
-	// did not find anything:
-	return default_vals;	
+        return vec;
+    }
+
+    // did not find anything:
+    return default_vals;
 }
 
 
@@ -357,8 +365,8 @@ std::vector<T> CmdLineArgs::getParams(const std::string &long_name, char short_n
    @return the values of the parameter, returned as a vector.
  */
 template <class T>
-std::vector<T> CmdLineArgs::getParams(const std::string &long_name,  
-                                      std::vector<T> default_vals, bool enforce_default_size,
+std::vector<T> CmdLineArgs::getParams(const std::string &long_name,
+                                      const std::vector<T> &default_vals, bool enforce_default_size,
                                       const std::string &desc, char separator)
 {
     return getParams<T>(long_name, ' ', default_vals, enforce_default_size, desc, separator);
@@ -374,28 +382,28 @@ std::vector<T> CmdLineArgs::getParams(const std::string &long_name,
  */
 int CmdLineArgs::getFlag(const std::string &long_name, char short_name, const std::string &desc)
 {
-	addUsage(long_name,short_name,"",desc);
+    addUsage(long_name,short_name,"",desc);
 
-	int nb=0;
-	
-	// First search the long names:
-	auto pos = findLongName(long_name);
-	while(pos != args_.end()){
-		++nb;
-		pos = args_.erase(pos);
-		pos = findLongName(long_name);
-	}
-	
-	// Then search the short names:
-	pos = findShortName(short_name);
-	while(pos != args_.end()){
-		++nb;
-		if(pos->size()==2)
-			pos = args_.erase(pos);
-		else
-			pos->erase(pos->find(short_name,1),1);
-		pos = findShortName(short_name);
-	}
+    int nb=0;
+
+    // First search the long names:
+    auto pos = findLongName(long_name);
+    while(pos != args_.end()){
+        ++nb;
+        pos = args_.erase(pos);
+        pos = findLongName(long_name);
+    }
+
+    // Then search the short names:
+    pos = findShortName(short_name);
+    while(pos != args_.end()){
+        ++nb;
+        if(pos->size()==2)
+            pos = args_.erase(pos);
+        else
+            pos->erase(pos->find(short_name,1),1);
+        pos = findShortName(short_name);
+    }
 
     return nb;
 }
@@ -419,45 +427,45 @@ int CmdLineArgs::getFlag(const std::string &long_name, const std::string &desc)
 //
 std::string CmdLineArgs::getParam(const std::string &long_name, char short_name, const std::string &default_value, const std::string &desc)
 {
-	std::string val;
-	addUsage(long_name, short_name, "\"" + default_value + "\"", desc);
-	
-	// First search the long names:
-	auto pos = findLongName(long_name);
-	if( pos != args_.end() ) {
-        
-		if(pos+2>args_.end())
-			throw std::runtime_error("\nError: parameter --" + long_name + " is not followed by a value");
-		
+    std::string val;
+    addUsage(long_name, short_name, "\"" + default_value + "\"", desc);
+
+    // First search the long names:
+    auto pos = findLongName(long_name);
+    if( pos != args_.end() ) {
+
+        if(pos+2>args_.end())
+            throw std::runtime_error("\nError: parameter --" + long_name + " is not followed by a value");
+
         pos = args_.erase(pos);
-		val = *pos;
-		args_.erase(pos);
-		
+        val = *pos;
+        args_.erase(pos);
+
         return val;
-	}
-	
-	// Then search the short names:
-	pos = findShortName(short_name);
-	if( pos != args_.end() ) {
-        
-		if(pos+2>args_.end())
-			throw std::runtime_error("\nError: parameter -" + std::string(1,short_name) + " is not followed by a value");
-		
+    }
+
+    // Then search the short names:
+    pos = findShortName(short_name);
+    if( pos != args_.end() ) {
+
+        if(pos+2>args_.end())
+            throw std::runtime_error("\nError: parameter -" + std::string(1,short_name) + " is not followed by a value");
+
         if(pos->size()==2)
-			pos = args_.erase(pos);
-		else{
-			pos->erase(pos->find(short_name,1),1);
-			++pos;
-		}
-        
-		val = *pos;
-		args_.erase(pos);
-		
+            pos = args_.erase(pos);
+        else{
+            pos->erase(pos->find(short_name,1),1);
+            ++pos;
+        }
+
+        val = *pos;
+        args_.erase(pos);
+
         return val;
-	}
-	
-	// did not find anything:
-	return default_value;
+    }
+
+    // did not find anything:
+    return default_value;
 }
 
 std::string CmdLineArgs::getParam(const std::string &long_name, const std::string &default_value, const std::string &desc)
@@ -478,13 +486,15 @@ std::string CmdLineArgs::getParam(const std::string &long_name, const char* defa
 
 // The following specialisation for string is necessary to cope with spaces inside strings and to catch the delimiter
 //
-std::vector<std::string> CmdLineArgs::getParams(const std::string &long_name, char short_name, std::vector<std::string> default_vals, bool enforce_default_size, const std::string &desc, char separator)
+std::vector<std::string> CmdLineArgs::getParams(const std::string &long_name, char short_name,
+                                                const std::vector<std::string> &default_vals, bool enforce_default_size,
+                                                const std::string &desc, char separator)
 {
     // Join the default values wit the separator for the usage
     //
     std::ostringstream oss;
     for(unsigned int i=0; i!=default_vals.size(); i++){
-        if(i>0) 
+        if(i>0)
             oss << ",";
         oss << default_vals[i];
     }
@@ -492,19 +502,19 @@ std::vector<std::string> CmdLineArgs::getParams(const std::string &long_name, ch
 
     std::string val;
     std::vector<std::string> vec;
-    
+
     // First search the long names:
     //
     auto pos = findLongName(long_name);
     if( pos != args_.end() ) {
-        
+
         if( pos+2  > args_.end() )
             throw std::runtime_error("\nError: parameter --" + long_name + " is not followed by a value");
-        
+
         pos = args_.erase(pos);
         val = *pos;
         args_.erase(pos);
-        
+
         vec = split(val, separator);
     }
 
@@ -512,10 +522,10 @@ std::vector<std::string> CmdLineArgs::getParams(const std::string &long_name, ch
     //
     pos = findShortName(short_name);
     if( pos != args_.end() ) {
-        
+
         if( pos+2 > args_.end() )
             throw std::runtime_error("\nError: parameter -" + std::string(1,short_name) + " is not followed by a value");
-        
+
         if( pos->size() == 2 )
             pos = args_.erase(pos);
         else {
@@ -525,14 +535,14 @@ std::vector<std::string> CmdLineArgs::getParams(const std::string &long_name, ch
         val = *pos;
         vec = split(val, separator);
     }
-    
+
     if (vec.empty())
         return default_vals;
-    
+
     if ( enforce_default_size && vec.size() == 1 )
         for( unsigned i=1; i<default_vals.size(); ++i)
             vec.push_back(vec[0]);
-    
+
     if ( enforce_default_size && vec.size() != default_vals.size() ) {
         std::ostringstream oss;
         oss << "\nError: parameter --" << long_name;
@@ -541,11 +551,13 @@ std::vector<std::string> CmdLineArgs::getParams(const std::string &long_name, ch
         oss << " is not followed by " << default_vals.size() << " values as expected.";
         throw std::runtime_error(oss.str());
     }
-    
+
     return vec;
 }
 
-std::vector<std::string> CmdLineArgs::getParams(const std::string &long_name, std::vector<std::string> default_vals, bool enforce_default_size, const std::string &desc, char separator)
+std::vector<std::string> CmdLineArgs::getParams(const std::string &long_name,
+                                                const std::vector<std::string> &default_vals, bool enforce_default_size,
+                                                const std::string &desc, char separator)
 {
     return getParams(long_name, ' ', default_vals, enforce_default_size, desc, separator);
 }
@@ -557,18 +569,18 @@ std::vector<std::string> CmdLineArgs::getParams(const std::string &long_name, st
 //
 void CmdLineArgs::addUsage(const std::string &long_name, char short_name, const std::string &default_val, const std::string &desc)
 {
-	std::string usage(4,' ');
-	usage += "--" + long_name;
-    
-	if( short_name != ' ' ) {
-		usage += " (-";
-		usage += short_name;
-		usage += ") ";
-	}
-    
-	if( default_val.size() ) 
+    std::string usage(4,' ');
+    usage += "--" + long_name;
+
+    if( short_name != ' ' ) {
+        usage += " (-";
+        usage += short_name;
+        usage += ") ";
+    }
+
+    if( default_val.size() )
         usage += " (default: " + default_val + ")";
-	
+
     usage_.push_back( std::pair<std::string, std::string>(usage,desc) );
 }
 
@@ -579,7 +591,7 @@ void CmdLineArgs::addUsage(const std::string &long_name, char short_name, const 
  */
 void CmdLineArgs::addUsageSeparator(const std::string &desc)
 {
-	usage_.push_back(std::pair<std::string, std::string>("SEP", desc));
+    usage_.push_back(std::pair<std::string, std::string>("SEP", desc));
 }
 
 
@@ -599,37 +611,37 @@ void CmdLineArgs::addUsageOutro(const std::string &str)
  */
 std::string CmdLineArgs::usage()
 {
-	// First find the maxim size of the arguments names:
-	std::string::size_type left_size=0; 
-	for( auto pos=usage_.begin(); pos!=usage_.end(); ++pos ) {
-		left_size = std::max(left_size,pos->first.size());
-	}
-	left_size += 5;
+    // First find the maxim size of the arguments names:
+    std::string::size_type left_size=0;
+    for( auto pos=usage_.begin(); pos!=usage_.end(); ++pos ) {
+        left_size = std::max(left_size,pos->first.size());
+    }
+    left_size += 5;
 
-	std::string usage(usage_intro_ + "\n");
-	for( auto pos=usage_.begin(); pos!=usage_.end(); ++pos ) {
-		
-		if(pos->first == "SEP"){
-			usage += pos->second;
-			usage += "\n";
-		}else{
-			usage += pos->first;
-			if(pos->first.size()<left_size)
-				usage += std::string(left_size-pos->first.size(),' ');
-			std::string right(pos->second);
-			std::string::size_type idx=0;
-			while( (idx = right.find('\n',idx)) != std::string::npos){
-				right.insert(idx+1,std::string(left_size,' '));
-				idx += left_size;
-			}
-			usage += right;
-			usage += '\n';
-		}
-	}
+    std::string usage(usage_intro_ + "\n");
+    for( auto pos=usage_.begin(); pos!=usage_.end(); ++pos ) {
+
+        if(pos->first == "SEP"){
+            usage += pos->second;
+            usage += "\n";
+        }else{
+            usage += pos->first;
+            if(pos->first.size()<left_size)
+                usage += std::string(left_size-pos->first.size(),' ');
+            std::string right(pos->second);
+            std::string::size_type idx=0;
+            while( (idx = right.find('\n',idx)) != std::string::npos){
+                right.insert(idx+1,std::string(left_size,' '));
+                idx += left_size;
+            }
+            usage += right;
+            usage += '\n';
+        }
+    }
 
     usage += usage_outro_;
 
-	return usage;
+    return usage;
 }
 
 
@@ -639,7 +651,7 @@ std::string CmdLineArgs::usage()
  */
 std::vector<std::string> CmdLineArgs::getRemaining()
 {
-	return args_;
+    return args_;
 }
 
 
@@ -649,11 +661,11 @@ std::vector<std::string> CmdLineArgs::getRemaining()
  */
 std::vector<std::string> CmdLineArgs::getUnparsedOpts()
 {
-	std::vector<std::string> unparsed;
+    std::vector<std::string> unparsed;
     for( auto &arg: args_ )
-		if( arg[0] == '-' )
-			unparsed.push_back(arg);
-	return unparsed;
+        if( arg[0] == '-' )
+            unparsed.push_back(arg);
+    return unparsed;
 }
 
 
@@ -677,12 +689,12 @@ void CmdLineArgs::throwIfRemaining()
 void CmdLineArgs::throwIfUnparsed()
 {
     std::vector<std::string> unparsed = getUnparsedOpts();
-	if( !unparsed.empty() ) {
+    if( !unparsed.empty() ) {
         std::string msg("\nError: unparsed options: ");
         for( auto &arg: unparsed )
-			msg += arg + " ";
-		throw std::runtime_error(msg);
-	}
+            msg += arg + " ";
+        throw std::runtime_error(msg);
+    }
 }
 
 
