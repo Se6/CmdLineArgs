@@ -14,7 +14,7 @@ It should take 2 minutes to be able to use it after looking at an example.
 Features
 --------
 - Supports "parameters" which we define by a name preceded by "--" and followed by a value. Example: `--nb 10` (`--nb=10` is also valid). Here *nb* is the parameter name, *10* its value.
-- Supports "flags" which we define by a name preceded by "--" and not followed by a value. Example: `--enable` (here *flag* is the flag name.)
+- Supports "flags" which we define by a name preceded by "--" and not followed by a value. Example: `--enable` Here *enable* is the flag name.
 - Supports long and short names: 
     - Long names starts with "--".
     - Short names are one letter starting with a single "-".
@@ -25,7 +25,7 @@ Features
 - Single header file.
 - Short flags can be combined. (`-f -l` is equivalent to `-fl`)
 - Integer parameters can be entered in decimal or hexadecimal notation. (Exple: `--number 0xff`)
-- Supports multiple values: `--values 2 3 4` 
+- Supports multiple values: Example `--values 2,3,4` Here *values* is the parameter name and is given 3 values. 
 
 
 Requirements
@@ -125,8 +125,8 @@ Building & testing
 - `make doc` to generate the html documentation.
 
 
-Limitations
------------
+Limitations & Known issues
+--------------------------
 - Conflict of shorten parameters names are not checked.
   if we have `getParam("aparam", 0, ...)`
   then `--aparam 0` will be fine, and also `--ap 0`. That is a feature. However if we also have `getParam("apart", 0)`, then `--ap 0` will set parameter aparam since it was the first defined....
