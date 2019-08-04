@@ -21,7 +21,7 @@ Features
 - Gives a nicely formatted usage.
 - Parameters and flags are defined and retrieved in a single call: no need to first install the parameter or flag and then retrieve its value.
 - Throws runtime_error exception when a parsing error occurs.
-- Abreviation of long names: `--my_long_parameter_name` can be used as `--my` as long as it does not conflict with another parameter name. Conflicts are not checked though.
+- Abbreviation of long names: `--my_long_parameter_name` can be used as `--my` as long as it does not conflict with another parameter name. Conflicts are not checked though.
 - Single header file.
 - Short flags can be combined. (`-f -l` is equivalent to `-fl`)
 - Integer parameters can be entered in decimal or hexadecimal notation. (Exple: `--number 0xff`)
