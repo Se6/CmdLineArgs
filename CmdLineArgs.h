@@ -273,7 +273,7 @@ std::vector<T> CmdLineArgs::getParams(const std::string &long_name, char short_n
                                       const std::vector<T> &default_vals, bool enforce_default_size,
                                       const std::string &desc, char separator)
 {
-    // Join the default values wit the separator for the usage
+    // Join the default values with the separator for the usage
     //
     std::ostringstream oss;
     for(unsigned int i=0; i<default_vals.size(); i++){
@@ -490,7 +490,7 @@ std::vector<std::string> CmdLineArgs::getParams(const std::string &long_name, ch
                                                 const std::vector<std::string> &default_vals, bool enforce_default_size,
                                                 const std::string &desc, char separator)
 {
-    // Join the default values wit the separator for the usage
+    // Join the default values with the separator for the usage
     //
     std::ostringstream oss;
     for(unsigned int i=0; i!=default_vals.size(); i++){
